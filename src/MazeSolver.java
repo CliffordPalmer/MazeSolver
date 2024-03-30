@@ -30,6 +30,7 @@ public class MazeSolver {
      * @return An arraylist of MazeCells to visit in order
      */
     public ArrayList<MazeCell> getSolution() {
+
         // ArrayList to store the solution, which is returned at the end
         ArrayList<MazeCell> solution = new ArrayList<MazeCell>();
 
@@ -62,6 +63,7 @@ public class MazeSolver {
      * @return An ArrayList of MazeCells in order from the start to end cell
      */
     public ArrayList<MazeCell> solveMazeDFS() {
+
         // Stack which stores the cells to explore
         Stack<MazeCell> toExplore = new Stack<MazeCell>();
         // Current MazeCell
@@ -82,16 +84,24 @@ public class MazeSolver {
             // Explore cell to the West
             reachIntoCell(current, toExplore, currentRow, currentCol - 1);
 
+            // Set the new current cell to the top of the stack
             current = toExplore.pop();
         }
+
+        // Run getSolution and return the result
         return getSolution();
     }
 
     public void reachIntoCell(MazeCell parent, Stack toExplore, int row, int col){
+
+        // Ensure that the cell being explored is valid to avoid errors
         if(maze.isValidCell(row, col)){
             MazeCell cell = maze.getCell(row, col);
+            // Add cell being explored to toExplore queue
             toExplore.add(cell);
+            // Set the parent of the cell being explored
             cell.setParent(parent);
+            // Set its status to explored
             cell.setExplored(true);
         }
     }
@@ -100,30 +110,46 @@ public class MazeSolver {
      * @return An ArrayList of MazeCells in order from the start to end cell
      */
     public ArrayList<MazeCell> solveMazeBFS() {
-        // TODO: Use BFS to solve the maze
-        // Explore the cells in the order: NORTH, EAST, SOUTH, WEST
-        Queue<MazeCell> toExplore = new LinkedList<MazeCell>();
-        MazeCell current = maze.getStartCell();
-        while(current != maze.getEndCell()){
 
+        // Stack which stores the cells to explore
+        Queue<MazeCell> toExplore = new LinkedList<MazeCell>();
+        // Current MazeCell
+        MazeCell current = maze.getStartCell();
+
+        // Loop while end of maze hasn't been reached
+        while(current != maze.getEndCell()){
+            // Create variables for row and col indexes of current cell
             int currentRow = current.getRow();
             int currentCol = current.getCol();
 
+            // Explore cell to the North
             reachIntoCell(current, toExplore, currentRow - 1, currentCol);
+            // Explore cell to the East
             reachIntoCell(current, toExplore, currentRow, currentCol + 1);
+            // Explore cell to the South
             reachIntoCell(current, toExplore, currentRow + 1, currentCol);
+            // Explore cell to the West
             reachIntoCell(current, toExplore, currentRow, currentCol - 1);
 
+            // Set the new current cell to the top of the stack
             current = toExplore.remove();
         }
+
+        // Run getSolution and return the result
         return getSolution();
     }
 
+    // Helper function which performs the repetitive task of exploring cells around the current cell
     public void reachIntoCell(MazeCell parent, Queue toExplore, int row, int col){
+
+        // Ensure that the cell being explored is valid to avoid errors
         if(maze.isValidCell(row, col)){
             MazeCell cell = maze.getCell(row, col);
+            // Add cell being explored to toExplore queue
             toExplore.add(cell);
+            // Set the parent of the cell being explored
             cell.setParent(parent);
+            // Set its status to explored
             cell.setExplored(true);
         }
     }
